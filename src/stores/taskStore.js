@@ -1,119 +1,20 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { storage } from '@/utils/index'
+import tasksData from '@/static/tasks.json'
 
 export const useTaskStore = defineStore('task', () => {
-  // 任务池数据
-  const taskPool = ref([
-    {
-      id: 1,
-      type: '✨ 极简自律',
-      content: '去洗个脸，不许看镜子超过10秒',
-      emoji: '✨',
-      category: 'self-discipline'
-    },
-    {
-      id: 2,
-      type: '🧘 松弛体验',
-      content: '躺下盯着天花板发呆 3 分钟',
-      emoji: '🧘',
-      category: 'relaxation'
-    },
-    {
-      id: 3,
-      type: '🎨 怪异哲学',
-      content: '在纸上写一句"我也不知道我是谁"然后折起来撕掉',
-      emoji: '🎨',
-      category: 'philosophy'
-    },
-    {
-      id: 4,
-      type: '🐸 离谱执行',
-      content: '学一声青蛙叫，没人听见也要叫',
-      emoji: '🐸',
-      category: 'weird'
-    },
-    {
-      id: 5,
-      type: '📵 抗拒行为',
-      content: '关掉手机 10 分钟，现在就做',
-      emoji: '📵',
-      category: 'resistance'
-    },
-    {
-      id: 6,
-      type: '🎯 实用微动作',
-      content: '给你水杯倒满水，然后看它发呆 30 秒',
-      emoji: '🎯',
-      category: 'practical'
-    },
-    {
-      id: 7,
-      type: '📍 空洞荒谬',
-      content: '打开窗户，对外面说："我自由啦！"',
-      emoji: '📍',
-      category: 'absurd'
-    },
-    {
-      id: 8,
-      type: '🌱 自然连接',
-      content: '去阳台或窗边深呼吸 5 次，感受空气',
-      emoji: '🌱',
-      category: 'nature'
-    },
-    {
-      id: 9,
-      type: '🎭 角色扮演',
-      content: '对着镜子做三个不同的表情，然后笑一笑',
-      emoji: '🎭',
-      category: 'playful'
-    },
-    {
-      id: 10,
-      type: '📝 文字游戏',
-      content: '在纸上写三个你最喜欢的词，然后划掉一个',
-      emoji: '📝',
-      category: 'creative'
-    },
-    {
-      id: 11,
-      type: '🎵 声音探索',
-      content: '用不同的音调说"你好"，直到找到最舒服的',
-      emoji: '🎵',
-      category: 'sensory'
-    },
-    {
-      id: 12,
-      type: '🔄 重复仪式',
-      content: '把桌上的东西重新排列一遍，然后恢复原状',
-      emoji: '🔄',
-      category: 'ritual'
-    },
-    {
-      id: 13,
-      type: '🤔 深度思考',
-      content: '问自己一个问题："我现在最需要什么？"然后等待答案',
-      emoji: '🤔',
-      category: 'reflection'
-    },
-    {
-      id: 14,
-      type: '🎪 即兴表演',
-      content: '站起来转三圈，然后停下来感受眩晕',
-      emoji: '🎪',
-      category: 'physical'
-    },
-    {
-      id: 15,
-      type: '💭 内心对话',
-      content: '在心里对今天的自己说一句话，无论是什么',
-      emoji: '💭',
-      category: 'emotional'
-    }
-  ])
+  // 任务池数据 - 从JSON文件加载
+  const taskPool = ref(tasksData.tasks || [])
 
   // 当前任务
   const currentTask = ref(null)
+
+  // 当前任务的反馈
+  const currentFeedback = ref({
+    completed: '',
+    skipped: ''
+  })
 
   // 任务记录
   const taskHistory = ref([])
@@ -134,11 +35,21 @@ export const useTaskStore = defineStore('task', () => {
     return Math.round((stats.value.completedTasks / stats.value.totalTasks) * 100)
   })
 
-  // 生成随机任务
+  // 生成随机任务和反馈
   const generateRandomTask = () => {
     const randomIndex = Math.floor(Math.random() * taskPool.value.length)
-    currentTask.value = { ...taskPool.value[randomIndex] }
-    return currentTask.value
+    const selectedTask = taskPool.value[randomIndex]
+
+    currentTask.value = { ...selectedTask }
+    currentFeedback.value = {
+      completed: selectedTask.feedback.completed,
+      skipped: selectedTask.feedback.skipped
+    }
+
+    return {
+      task: currentTask.value,
+      feedback: currentFeedback.value
+    }
   }
 
   // 完成任务
@@ -149,6 +60,7 @@ export const useTaskStore = defineStore('task', () => {
       id: Date.now(),
       taskId: currentTask.value.id,
       task: currentTask.value,
+      feedback: currentFeedback.value.completed,
       status: 'completed',
       timestamp: new Date().toISOString(),
       date: new Date().toLocaleDateString()
@@ -176,6 +88,7 @@ export const useTaskStore = defineStore('task', () => {
       id: Date.now(),
       taskId: currentTask.value.id,
       task: currentTask.value,
+      feedback: currentFeedback.value.skipped,
       status: 'skipped',
       timestamp: new Date().toISOString(),
       date: new Date().toLocaleDateString()
@@ -306,6 +219,10 @@ export const useTaskStore = defineStore('task', () => {
       lastCompletedDate: null
     }
     currentTask.value = null
+    currentFeedback.value = {
+      completed: '',
+      skipped: ''
+    }
     storage.clear()
   }
 
@@ -315,6 +232,7 @@ export const useTaskStore = defineStore('task', () => {
   return {
     taskPool,
     currentTask,
+    currentFeedback,
     taskHistory,
     stats,
     completionRate,

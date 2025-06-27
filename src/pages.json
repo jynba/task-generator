@@ -35,6 +35,30 @@
 				"navigationBarTextStyle": "white",
 				"backgroundColor": "#667eea"
 			}
+		},
+		{
+			"path": "pages/test/test",
+			"style": {
+				"navigationBarTitleText": "功能测试",
+				"navigationBarBackgroundColor": "#667eea",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#667eea"
+			}
+		},
+		{
+			"path": "pages/share-demo/share-demo",
+			"style": {
+				"navigationBarTitleText": "分享功能演示",
+				"navigationBarBackgroundColor": "#667eea",
+				"navigationBarTextStyle": "white",
+				"backgroundColor": "#667eea"
+			}
+		},
+		{
+			"path": "pages/share-preview/share-preview",
+			"style": {
+				"navigationBarTitleText": "分享图片预览"
+			}
 		}
 	],
 	"globalStyle": {

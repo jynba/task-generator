@@ -40,35 +40,6 @@ export const parseTaskTime = (content) => {
   return 0
 }
 
-// 生成随机反馈
-export const getRandomFeedback = (status) => {
-  const feedbacks = {
-    completed: [
-      '你正逐渐脱离现代社会的高速列车',
-      '这个小小的行动让你离真实的自己更近了一步',
-      '有时候最简单的动作反而最有力量',
-      '你正在创造属于自己的仪式感',
-      '每一个微小的行动都在重塑你的生活',
-      '你正在打破常规，创造新的可能性',
-      '这种微小的坚持正在改变你的人生轨迹'
-    ],
-    skipped: [
-      '可能你还在压抑真实自我',
-      '没关系，下次再试试看',
-      '跳过也是一种选择，尊重自己的感受',
-      '也许这个任务现在不适合你',
-      '保持开放的心态，随时可以重新开始',
-      '每个人都有自己的节奏，不要着急',
-      '有时候休息也是一种前进'
-    ]
-  }
-
-  const feedbackList = feedbacks[status] || feedbacks.skipped
-  const randomIndex = Math.floor(Math.random() * feedbackList.length)
-
-  return feedbackList[randomIndex]
-}
-
 // 获取执行提示
 export const getExecutionTip = (category) => {
   const tips = {
@@ -78,7 +49,19 @@ export const getExecutionTip = (category) => {
     'weird': '有时候，做点奇怪的事情反而很有趣。',
     'resistance': '面对抗拒，正是成长的机会。',
     'practical': '实用的行动往往最有价值。',
-    'absurd': '荒谬中可能藏着真理。'
+    'absurd': '荒谬中可能藏着真理。',
+    'nature': '与自然连接，感受生命的力量。',
+    'playful': '保持童心，享受游戏的乐趣。',
+    'creative': '创造力是内在的宝藏。',
+    'sensory': '感官体验是认识世界的方式。',
+    'ritual': '仪式感让生活更有意义。',
+    'reflection': '反思是成长的阶梯。',
+    'physical': '身体是心灵的载体。',
+    'emotional': '情感是内在的指南针。',
+    'energy': '能量是生命的源泉。',
+    'meditation': '冥想是内在的旅程。',
+    'focus': '专注是成功的关键。',
+    'gratitude': '感恩是幸福的源泉。'
   }
 
   return tips[category] || '专注当下，享受过程。'

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "盲打任务生成器 - 让系统给你安排任务，盲目执行",
   "scripts": {
+    "dev": "uni -p mp-weixin",
     "dev:custom": "uni -p",
     "dev:h5": "uni",
     "dev:h5:ssr": "uni --ssr",

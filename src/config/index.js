@@ -88,6 +88,26 @@ export const APP_CONFIG = {
       name: '内心对话',
       emoji: '💭',
       description: '关注情感体验的任务'
+    },
+    'energy': {
+      name: '能量充电',
+      emoji: '🌟',
+      description: '提升能量的任务'
+    },
+    'meditation': {
+      name: '色彩冥想',
+      emoji: '🎨',
+      description: '冥想和专注的任务'
+    },
+    'focus': {
+      name: '目标聚焦',
+      emoji: '🎯',
+      description: '提升专注力的任务'
+    },
+    'gratitude': {
+      name: '感恩练习',
+      emoji: '🌈',
+      description: '培养感恩心态的任务'
     }
   },
 
