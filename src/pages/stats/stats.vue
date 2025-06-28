@@ -3,23 +3,23 @@
     <!-- 总体统计 -->
     <view class="overall-stats glass rounded">
       <text class="stats-title">总体行动力报告</text>
-      
+
       <view class="stats-grid">
         <view class="stat-card">
           <text class="stat-number">{{ stats.totalTasks }}</text>
           <text class="stat-label">总任务数</text>
         </view>
-        
+
         <view class="stat-card">
           <text class="stat-number">{{ stats.completedTasks }}</text>
           <text class="stat-label">已完成</text>
         </view>
-        
+
         <view class="stat-card">
           <text class="stat-number">{{ stats.skippedTasks }}</text>
           <text class="stat-label">已跳过</text>
         </view>
-        
+
         <view class="stat-card">
           <text class="stat-number">{{ completionRate }}%</text>
           <text class="stat-label">完成率</text>
@@ -40,18 +40,18 @@
     <!-- 本周统计 -->
     <view class="week-stats glass rounded">
       <text class="section-title">本周表现</text>
-      
+
       <view class="week-data">
         <view class="week-item">
           <text class="week-label">本周任务</text>
           <text class="week-number">{{ weekTasks.length }}</text>
         </view>
-        
+
         <view class="week-item">
           <text class="week-label">本周完成</text>
           <text class="week-number">{{ weekCompleted }}</text>
         </view>
-        
+
         <view class="week-item">
           <text class="week-label">本周完成率</text>
           <text class="week-number">{{ weekRate }}%</text>
@@ -62,18 +62,18 @@
     <!-- 本月统计 -->
     <view class="month-stats glass rounded">
       <text class="section-title">本月表现</text>
-      
+
       <view class="month-data">
         <view class="month-item">
           <text class="month-label">本月任务</text>
           <text class="month-number">{{ monthTasks.length }}</text>
         </view>
-        
+
         <view class="month-item">
           <text class="month-label">本月完成</text>
           <text class="month-number">{{ monthCompleted }}</text>
         </view>
-        
+
         <view class="month-item">
           <text class="month-label">本月完成率</text>
           <text class="month-number">{{ monthRate }}%</text>
@@ -84,18 +84,14 @@
     <!-- 任务类型分布 -->
     <view class="category-stats glass rounded">
       <text class="section-title">任务类型分布</text>
-      
+
       <view class="category-list">
-        <view 
-          v-for="category in categoryStats" 
-          :key="category.name"
-          class="category-item"
-        >
+        <view v-for="category in categoryStats" :key="category.name" class="category-item">
           <view class="category-info">
             <text class="category-emoji">{{ category.emoji }}</text>
             <text class="category-name">{{ category.name }}</text>
           </view>
-          
+
           <view class="category-numbers">
             <text class="category-count">{{ category.count }}</text>
             <text class="category-percent">{{ category.percent }}%</text>
@@ -108,13 +104,9 @@
     <!-- 最近任务记录 -->
     <view class="recent-tasks glass rounded">
       <text class="section-title">最近任务记录</text>
-      
+
       <view v-if="recentTasks.length > 0" class="task-list">
-        <view 
-          v-for="task in recentTasks" 
-          :key="task.id"
-          class="task-item"
-        >
+        <view v-for="task in recentTasks" :key="task.id" class="task-item">
           <view class="task-main">
             <view class="task-header">
               <text class="task-emoji">{{ task.task.emoji }}</text>
@@ -123,25 +115,25 @@
                 {{ task.status === 'completed' ? '✅' : '🙅‍♀️' }}
               </text>
             </view>
-            
+
             <text class="task-content">{{ task.task.content }}</text>
-            
+
             <text class="task-time">{{ formatTime(task.timestamp) }}</text>
           </view>
         </view>
       </view>
-      
+
       <view v-else class="empty-tasks">
         <text class="empty-emoji">📊</text>
         <text class="empty-text">还没有任务记录</text>
-        <text class="empty-subtext">快去盲打一下开始你的行动之旅吧！</text>
+        <text class="empty-subtext">快去别问，点一下开始你的行动之旅吧！</text>
       </view>
     </view>
 
     <!-- 行动建议 -->
     <view class="action-suggestions glass rounded">
       <text class="section-title">行动建议</text>
-      
+
       <view class="suggestion-list">
         <view class="suggestion-item">
           <text class="suggestion-emoji">💡</text>
@@ -153,13 +145,13 @@
     <!-- 数据管理 -->
     <view class="data-management glass rounded">
       <text class="section-title">数据管理</text>
-      
+
       <view class="management-buttons">
         <button class="management-btn export-btn" @click="exportData">
           <text class="btn-emoji">📤</text>
           <text class="btn-text">导出数据</text>
         </button>
-        
+
         <button class="management-btn clear-btn" @click="clearData">
           <text class="btn-emoji">🗑️</text>
           <text class="btn-text">清空数据</text>
@@ -180,7 +172,7 @@ const taskStore = useTaskStore()
 const stats = computed(() => taskStore.stats)
 const completionRate = computed(() => taskStore.completionRate)
 const weekTasks = computed(() => taskStore.getWeekTasks())
-const weekCompleted = computed(() => 
+const weekCompleted = computed(() =>
   weekTasks.value.filter(task => task.status === 'completed').length
 )
 const weekRate = computed(() => {
@@ -189,7 +181,7 @@ const weekRate = computed(() => {
 })
 
 const monthTasks = computed(() => taskStore.getMonthTasks())
-const monthCompleted = computed(() => 
+const monthCompleted = computed(() =>
   monthTasks.value.filter(task => task.status === 'completed').length
 )
 const monthRate = computed(() => {
@@ -216,9 +208,9 @@ const exportData = () => {
     history: taskStore.taskHistory,
     exportTime: new Date().toISOString()
   }
-  
+
   const dataStr = JSON.stringify(data, null, 2)
-  
+
   // 在 H5 环境下可以下载文件
   if (process.env.NODE_ENV === 'development') {
     const blob = new Blob([dataStr], { type: 'application/json' })
@@ -229,7 +221,7 @@ const exportData = () => {
     a.click()
     URL.revokeObjectURL(url)
   }
-  
+
   uni.showToast({
     title: '数据导出功能开发中',
     icon: 'none',
@@ -345,28 +337,33 @@ onMounted(() => {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.week-stats, .month-stats {
+.week-stats,
+.month-stats {
   padding: 25px;
 }
 
-.week-data, .month-data {
+.week-data,
+.month-data {
   display: flex;
   justify-content: space-between;
 }
 
-.week-item, .month-item {
+.week-item,
+.month-item {
   text-align: center;
   flex: 1;
 }
 
-.week-label, .month-label {
+.week-label,
+.month-label {
   display: block;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 5px;
 }
 
-.week-number, .month-number {
+.week-number,
+.month-number {
   display: block;
   font-size: 20px;
   font-weight: bold;
@@ -574,4 +571,4 @@ onMounted(() => {
 .btn-emoji {
   margin-right: 8px;
 }
-</style> 
+</style>

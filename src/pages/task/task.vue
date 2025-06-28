@@ -48,14 +48,16 @@
           <text class="btn-text">{{ timerRunning ? '暂停' : '开始计时' }}</text>
         </button>
 
-        <button v-if="isCompleted" class="action-btn share-btn" @click="generateShareImage">
-          <text class="btn-emoji">📤</text>
-          <text class="btn-text">分享成果</text>
-        </button>
-        <button v-if="isCompleted" class="action-btn next-btn" @click="generateNextTask">
-          <text class="btn-emoji">🎲</text>
-          <text class="btn-text">下一个任务</text>
-        </button>
+        <view class="action-flex">
+          <button v-if="isCompleted" class="action-btn share-btn" @click="generateShareImage">
+            <text class="btn-emoji">📤</text>
+            <text class="btn-text">分享成果</text>
+          </button>
+          <button v-if="isCompleted" class="action-btn next-btn" @click="generateNextTask">
+            <text class="btn-emoji">🎲</text>
+            <text class="btn-text">下一个任务</text>
+          </button>
+        </view>
       </view>
 
       <!-- 完成反馈 -->
@@ -65,7 +67,7 @@
       </view>
 
       <!-- 进度指示器 -->
-      <view class="progress-indicator">
+      <view v-if="showTimer" class="progress-indicator">
         <view class="progress-bar">
           <view class="progress-fill" :style="{ width: progressPercent + '%' }"></view>
         </view>
@@ -396,6 +398,11 @@ const onImageError = (error) => {
   flex-direction: column;
   gap: 30rpx;
   margin-bottom: 50rpx;
+}
+
+.action-flex {
+  display: flex;
+  gap: 20rpx;
 }
 
 .action-btn {

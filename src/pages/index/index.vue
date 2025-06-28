@@ -2,8 +2,11 @@
   <view class="index-page">
     <!-- 头部区域 -->
     <view class="header">
+      <view class="test-btn" @click="goTestPage">
+        <text class="test-btn-text">测试</text>
+      </view>
       <view class="title">
-        <text class="main-title">盲打任务生成器</text>
+        <text class="main-title">别问我干嘛</text>
         <text class="sub-title">让系统给你安排任务，盲目执行</text>
       </view>
 
@@ -26,12 +29,12 @@
 
     <!-- 主要内容区域 -->
     <view class="main-content">
-      <!-- 盲打按钮 -->
-      <view class="blind-button-container">
-        <button class="blind-button" @click="generateTask" :disabled="isGenerating">
-          <view class="blind-button-content">
+      <!-- 行动按钮 -->
+      <view class="action-button-container">
+        <button class="action-button" @click="generateTask" :disabled="isGenerating">
+          <view class="action-button-content">
             <text class="button-emoji">🌀</text>
-            <text class="button-text">{{ isGenerating ? '生成中...' : '盲打一下' }}</text>
+            <text class="button-text">{{ isGenerating ? '生成中...' : '随机一下' }}</text>
           </view>
         </button>
       </view>
@@ -63,14 +66,14 @@
       <!-- 空状态 -->
       <view v-else class="empty-state glass rounded">
         <text class="empty-emoji">🎲</text>
-        <text class="empty-text">点击上方按钮开始盲打</text>
+        <text class="empty-text">点击上方按钮开始行动</text>
         <text class="empty-subtext">系统会随机给你安排一个任务</text>
       </view>
     </view>
 
     <!-- 底部提示 -->
     <view class="footer-tips">
-      <text class="tip-text">💡 提示：不要想太多，直接执行就好</text>
+      <text class="tip-text">💡 提示：别想太多，直接执行就好</text>
     </view>
   </view>
 </template>
@@ -136,6 +139,10 @@ const handleSkip = () => {
   taskStore.currentTask = null
 }
 
+const goTestPage = () => {
+  uni.navigateTo({ url: '/pages/test/test' })
+}
+
 onMounted(() => {
   // 页面加载时的初始化
   console.log('首页加载完成')
@@ -152,6 +159,7 @@ onMounted(() => {
 
 .header {
   margin-bottom: 30rpx;
+  position: relative;
 }
 
 .title {
@@ -204,14 +212,14 @@ onMounted(() => {
   align-items: center;
 }
 
-.blind-button-container {
+.action-button-container {
   margin-bottom: 40rpx;
   position: relative;
   width: 220rpx;
   height: 220rpx;
 }
 
-.blind-button {
+.action-button {
   width: 220rpx;
   height: 220rpx;
   border-radius: 50%;
@@ -224,7 +232,7 @@ onMounted(() => {
   transform: translate(-50%, -50%);
   position: absolute;
 
-  .blind-button-content {
+  .action-button-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -234,11 +242,11 @@ onMounted(() => {
   }
 }
 
-.blind-button:active {
-  transform: scale(0.95);
+.action-button:active {
+  transform: translate(-50%, -50%) scale(0.95);
 }
 
-.blind-button:disabled {
+.action-button:disabled {
   opacity: 0.7;
 }
 
@@ -361,5 +369,24 @@ onMounted(() => {
 .tip-text {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
+}
+
+.test-btn {
+  position: absolute;
+  top: 18rpx;
+  right: 0rpx;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 20rpx;
+  padding: 10rpx 28rpx;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+.test-btn-text {
+  letter-spacing: 2rpx;
 }
 </style>

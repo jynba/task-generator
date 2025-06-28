@@ -187,6 +187,15 @@ export const useTaskStore = defineStore('task', () => {
     })).sort((a, b) => b.count - a.count)
   }
 
+  // 多条件筛选任务（仅主标签tags多选为并集）
+  const filterTasks = (filters = {}) => {
+    return taskPool.value.filter(task => {
+      // 主标签多选：filters.tags为数组，若为空数组则不过滤
+      const matchTags = !filters.tags || filters.tags.length === 0 || filters.tags.some(tag => task.tags?.includes(tag))
+      return matchTags
+    })
+  }
+
   // 保存到本地存储
   const saveToStorage = () => {
     storage.set('taskHistory', taskHistory.value)
@@ -245,6 +254,7 @@ export const useTaskStore = defineStore('task', () => {
     getCategoryStats,
     saveToStorage,
     loadFromStorage,
-    clearAllData
+    clearAllData,
+    filterTasks
   }
 }) 

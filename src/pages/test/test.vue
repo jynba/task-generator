@@ -3,6 +3,39 @@
     <view class="container glass rounded">
       <text class="title">任务生成测试</text>
 
+      <!-- 任务筛选区 -->
+      <view class="filter-section">
+        <view class="filter-item">
+          分类：
+          <checkbox-group @change="onTagsChange">
+            <label v-for="tag in tagOptions" :key="tag">
+              <checkbox :value="tag" :checked="selectedTags.includes(tag)" />{{ tag }}
+            </label>
+          </checkbox-group>
+        </view>
+        <button class="action-btn" @click="clearFilters">重置筛选</button>
+      </view>
+
+      <!-- 筛选结果 -->
+      <view class="filter-result-section">
+        <text class="section-title">筛选结果（{{ filteredTasks.length }}）</text>
+        <view v-if="filteredTasks.length > 0">
+          <view v-for="task in filteredTasks" :key="task.id" class="task-card">
+            <view class="task-header">
+              <text class="task-emoji">{{ task.emoji }}</text>
+              <text class="task-type">{{ task.type }}</text>
+            </view>
+            <text class="task-content">{{ task.content }}</text>
+            <view class="task-tags">
+              <text v-for="tag in task.tags" :key="tag" class="task-tag">#{{ tag }}</text>
+            </view>
+          </view>
+        </view>
+        <view v-else class="empty-history">
+          <text class="empty-text">无符合条件的任务</text>
+        </view>
+      </view>
+
       <!-- 当前任务 -->
       <view v-if="currentTask" class="task-section">
         <text class="section-title">当前任务</text>
@@ -12,7 +45,6 @@
             <text class="task-type">{{ currentTask.type }}</text>
           </view>
           <text class="task-content">{{ currentTask.content }}</text>
-
           <!-- 反馈预览 -->
           <view class="feedback-preview">
             <text class="feedback-title">完成反馈：</text>
@@ -79,7 +111,9 @@
               </text>
             </view>
             <text class="history-content">{{ record.task.content }}</text>
+            <br />
             <text class="history-feedback">{{ record.feedback }}</text>
+            <br />
             <text class="history-time">{{ formatTime(record.timestamp) }}</text>
           </view>
         </view>
@@ -110,6 +144,23 @@ const stats = computed(() => taskStore.stats)
 const completionRate = computed(() => taskStore.completionRate)
 const recentHistory = computed(() => {
   return taskStore.taskHistory.slice(-5).reverse()
+})
+
+// 筛选相关数据
+const tagOptions = [
+  '自律', '放松', '创造', '情感', '自然', '专注', '趣味', '感恩'
+]
+const selectedTags = ref([])
+const onTagsChange = e => {
+  selectedTags.value = e.detail.value
+}
+const clearFilters = () => {
+  selectedTags.value = []
+}
+const filteredTasks = computed(() => {
+  return taskStore.filterTasks({
+    tags: selectedTags.value
+  })
 })
 
 // 生成任务
@@ -370,5 +421,46 @@ const skipTask = () => {
 .empty-text {
   color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
+}
+
+.filter-section {
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.filter-item {
+  font-size: 15px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.filter-result-section {
+  margin-bottom: 30px;
+}
+
+.task-tags {
+  margin-top: 8px;
+}
+
+.task-tag {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 12px;
+  border-radius: 6px;
+  padding: 2px 8px;
+  margin-right: 6px;
+  margin-bottom: 2px;
+}
+
+.task-difficulty {
+  font-size: 13px;
+  color: #ffd700;
+  margin-left: 8px;
 }
 </style>

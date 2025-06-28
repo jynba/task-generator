@@ -1,10 +1,10 @@
 <template>
   <view class="result-page">
-    <!-- 隐藏的画布用于生成分享图片 -->
-    <canvas canvas-id="shareCanvas" style="position: fixed; top: -9999px; left: -9999px; width: 750px; height: 1000px;"
-      width="750" height="1000"></canvas>
-
     <view v-if="taskRecord" class="result-container glass rounded">
+      <!-- 顶部icon按钮 -->
+      <view class="corner-btn left-corner" @click="goHome">
+        <text class="corner-icon">🏠</text>
+      </view>
       <!-- 结果头部 -->
       <view class="result-header">
         <text class="result-emoji">{{ resultEmoji }}</text>
@@ -62,14 +62,6 @@
           <text class="btn-emoji">🎲</text>
           <text class="btn-text">下一个任务</text>
         </button>
-        <button class="action-btn stats-btn" @click="viewStats">
-          <text class="btn-emoji">📊</text>
-          <text class="btn-text">查看统计</text>
-        </button>
-        <button class="action-btn home-btn" @click="goHome">
-          <text class="btn-emoji">🏠</text>
-          <text class="btn-text">返回首页</text>
-        </button>
       </view>
 
       <!-- 分享图片预览 -->
@@ -86,8 +78,8 @@
         <text class="preview-tip">长按图片可保存到相册，或点击下方按钮保存</text>
       </view>
 
-      <!-- 成就提示 -->
-      <view v-if="showAchievement" class="achievement">
+      <!-- 顶部成就浮现提示 -->
+      <view v-if="showAchievement" class="achievement-toast" :class="{ 'show': showAchievement }">
         <text class="achievement-emoji">🏆</text>
         <text class="achievement-text">{{ achievementText }}</text>
       </view>
@@ -115,6 +107,7 @@ const showAchievement = ref(false)
 const achievementText = ref('')
 const shareImagePath = ref('')
 const previewRef = ref(null)
+let achievementTimer = null
 
 // 计算属性
 const stats = computed(() => taskStore.stats)
@@ -171,27 +164,27 @@ const checkAchievements = () => {
   const achievements = [
     {
       condition: () => stats.value.totalTasks === 1,
-      text: '🎉 恭喜完成第一个任务！'
+      text: '恭喜完成第一个任务！'
     },
     {
       condition: () => stats.value.totalTasks === 10,
-      text: '🎯 已完成10个任务，行动力正在提升！'
+      text: '已完成10个任务，行动力正在提升！'
     },
     {
       condition: () => stats.value.totalTasks === 50,
-      text: '🚀 已完成50个任务，你正在创造奇迹！'
+      text: '已完成50个任务，你正在创造奇迹！'
     },
     {
       condition: () => stats.value.streakDays === 3,
-      text: '🔥 连续完成3天，习惯正在形成！'
+      text: '连续完成3天，习惯正在形成！'
     },
     {
       condition: () => stats.value.streakDays === 7,
-      text: '🌟 连续完成一周，你已经成为行动大师！'
+      text: '连续完成一周，你已经成为行动大师！'
     },
     {
       condition: () => completionRate.value >= 80,
-      text: '💎 完成率超过80%，你的执行力令人敬佩！'
+      text: '完成率超过80%，你的执行力令人敬佩！'
     }
   ]
 
@@ -199,6 +192,10 @@ const checkAchievements = () => {
     if (achievement.condition()) {
       showAchievement.value = true
       achievementText.value = achievement.text
+      if (achievementTimer) clearTimeout(achievementTimer)
+      achievementTimer = setTimeout(() => {
+        showAchievement.value = false
+      }, 2500)
       break
     }
   }
@@ -232,13 +229,6 @@ const generateNextTask = () => {
   })
 }
 
-// 查看统计
-const viewStats = () => {
-  uni.switchTab({
-    url: '/pages/stats/stats'
-  })
-}
-
 // 返回首页
 const goHome = () => {
   uni.switchTab({
@@ -250,7 +240,7 @@ const goHome = () => {
 <style lang="scss" scoped>
 .result-page {
   min-height: 100vh;
-  padding: 40rpx;
+  padding: 0 40rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -258,7 +248,6 @@ const goHome = () => {
 
 .result-container {
   padding: 60rpx;
-  margin-bottom: 40rpx;
 }
 
 .result-header {
@@ -373,11 +362,39 @@ const goHome = () => {
   font-weight: bold;
 }
 
+.corner-btn {
+  position: absolute;
+  top: 32rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+.left-corner {
+  left: 32rpx;
+}
+
+.right-corner {
+  right: 32rpx;
+}
+
+.corner-icon {
+  font-size: 40rpx;
+  color: #fff;
+}
+
 .action-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 30rpx;
-  margin-bottom: 50rpx;
+  justify-content: center;
+  gap: 40rpx;
+  margin: 40rpx 0 0 0;
 }
 
 .action-btn {
@@ -398,47 +415,54 @@ const goHome = () => {
 }
 
 .next-btn {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-}
-
-.stats-btn {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
-  color: white;
-}
-
-.home-btn {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2rpx solid rgba(255, 255, 255, 0.3);
 }
 
 .action-btn:active {
   transform: scale(0.95);
 }
 
-.btn-emoji {
-  margin-right: 16rpx;
+.action-btn:disabled {
+  opacity: 0.6;
+  transform: none;
 }
 
-.achievement {
-  text-align: center;
-  padding: 40rpx;
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3));
-  border-radius: 24rpx;
-  border: 4rpx solid rgba(255, 215, 0, 0.5);
+.achievement-toast {
+  position: fixed;
+  top: 60rpx;
+  left: 50%;
+  transform: translateX(-50%) translateY(-60rpx);
+  background: linear-gradient(90deg, #ffe259, #ffa751);
+  color: #fff;
+  border-radius: 32rpx;
+  box-shadow: 0 4rpx 24rpx rgba(255, 215, 0, 0.18);
+  min-width: 480rpx;
+  max-width: 90vw;
+  padding: 28rpx 80rpx;
+  display: flex;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.achievement-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
 }
 
 .achievement-emoji {
-  display: block;
-  font-size: 64rpx;
-  margin-bottom: 20rpx;
+  font-size: 40rpx;
+  margin-right: 18rpx;
 }
 
 .achievement-text {
-  font-size: 32rpx;
-  color: white;
+  font-size: 28rpx;
   font-weight: bold;
+  color: #fff;
 }
 
 .loading-container {

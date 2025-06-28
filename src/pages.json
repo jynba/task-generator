@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "盲打任务生成器",
+				"navigationBarTitleText": "别问我干嘛",
 				"navigationBarBackgroundColor": "#667eea",
 				"navigationBarTextStyle": "white",
 				"backgroundColor": "#667eea"
@@ -63,7 +63,7 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "盲打任务生成器",
+		"navigationBarTitleText": "别问我干嘛",
 		"navigationBarBackgroundColor": "#667eea",
 		"backgroundColor": "#667eea"
 	},
@@ -77,7 +77,7 @@
 				"pagePath": "pages/index/index",
 				"iconPath": "static/home.png",
 				"selectedIconPath": "static/home-active.png",
-				"text": "盲打"
+				"text": "行动"
 			},
 			{
 				"pagePath": "pages/stats/stats",
